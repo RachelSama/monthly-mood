@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tabla con celdas verdes</title>
+    <style>
+        .tabla {
+            margin: 2%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            align-content: center;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            align-content: center;
+        }
+
+        .lista {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-align: center;
+            align-content: center;
+        }
+
+        .fila {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .celda {
+            width: 40px;
+            height: 40px;
+            margin: 2px;
+            border: 1px solid black;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .colorLista {
+            width: 20px;
+            height: 20px;
+            margin: 5px;
+            border: 1px solid black;
+        }
+
+        .verde {
+            background-color: rgb(159, 207, 159);
+        }
+
+        .rojo {
+            background-color: rgb(233, 166, 166);
+        }
+
+        .azul {
+            background-color: rgb(159, 184, 207);
+        }
+
+        .amarillo {
+            background-color: rgb(255, 248, 154);
+        }
+
+        .rosa {
+            background-color: rgb(255, 182, 231);
+        }
+
+        .gris {
+            background-color: rgb(177, 177, 177);
+        }
+
+        .clear {
+            background-color: rgba(177, 177, 177, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="tabla"></div>
+
+        <div class="lista">
+            <div class="colorLista amarillo"></div>
+            <p>Feliz/Muy Bien</p>
+            <div class="colorLista verde"></div>
+            <p>Afortunada/Suertuda</p>
+        </div>
+        <div class="lista">
+            <div class="colorLista rojo"></div>
+            <p>Enfadada/Irritada</p>
+            <div class="colorLista azul"></div>
+            <p>Triste/Melancolida</p>
+        </div>
+        <div class="lista">
+            
+            <div class="colorLista rosa"></div>
+            <p>Enamorada/In Love</p>
+            <div class="colorLista gris"></div>
+            <p>Normal/Sin Mas</p>
+            <div class="colorLista clear"></div>
+            <p>Clear</p>
+        </div>
+    </div>
+
+    <script>
+        let day = 1;
+        const tabla = document.querySelector('.tabla');
+
+        // Obtener los valores de almacenamiento local si existen
+        const storedColors = JSON.parse(localStorage.getItem('colors')) || {};
+
+        for (let i = 0; i < 5; i++) {
+            const fila = document.createElement('div');
+            fila.classList.add('fila');
+            tabla.appendChild(fila);
+            for (let j = 0; j < 7; j++) {
+                const celda = document.createElement('div');
+                celda.id = 'celda' + i + "-" + j;
+                celda.classList.add('celda');
+                if (day <= 31) {
+                    celda.textContent = day;
+                }
+                day++;
+                // Establecer el color de la celda desde el almacenamiento local si existe
+                const storedColor = storedColors[celda.id];
+                if (storedColor) {
+                    celda.classList.add(storedColor);
+                } else {
+                    celda.classList.add('clear');
+
+                }
+
+                fila.appendChild(celda);
+            }
+        }
+
+        const celdas = document.querySelectorAll('.celda');
+        const cajasColor = document.querySelectorAll('.colorLista');
+
+        const colores = ['verde', 'amarillo', 'rojo', 'azul', 'rosa', 'gris', 'clear'];
+        let contador = 0;
+
+        celdas.forEach((celda) =>
+            celda.addEventListener('click', function () {
+                if (celda.classList.contains('clear')) {
+                    celda.classList.remove('clear');
+                }
+                colores.forEach((color) => celda.classList.remove(color));
+                celda.classList.add(colores[contador]);
+
+                // Guardar el color de la celda en el almacenamiento local
+                storedColors[celda.id] = colores[contador];
+                localStorage.setItem('colors', JSON.stringify(storedColors));
+
+                contador = (contador + 1) % colores.length;
+            })
+        );
+
+    </script>
+</body>
+
+</html>
